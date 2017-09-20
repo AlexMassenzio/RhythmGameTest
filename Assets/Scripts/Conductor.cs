@@ -9,19 +9,39 @@ using UnityEngine;
 
 public class Conductor : MonoBehaviour {
 
-    int crotchetsPerBar = 8;
     public float bpm = 120;
     public float crotchet;
     public float songPosition;
-    public float offset = 0.2f; //positive means the song must be minussed.
+	public float deltaSongPosition;
+    public float offset = 0f; //positive means the song must be minussed.
+	public int beat;
+
+	private AudioSource song;
 
 	// Use this for initialization
 	void Start () {
-		
+		song = GetComponent<AudioSource>();
+		beat = 0;
+		crotchet = 0;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		
+		float oldSongPosition = songPosition;
+		songPosition = song.time - offset;
+		deltaSongPosition = songPosition - oldSongPosition;
+
+		if(crotchet >= 60f / bpm)
+		{
+			beat++;
+			crotchet -= 60f / bpm;
+		}
+		else
+		{
+			crotchet += deltaSongPosition;
+		}
+
+		Debug.Log("beat: " + beat);
+		Debug.Log("crotchet: " + crotchet);
 	}
 }
