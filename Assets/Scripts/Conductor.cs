@@ -9,7 +9,7 @@ using UnityEngine;
 
 public class Conductor : MonoBehaviour {
 
-    public float bpm = 120;
+    public float bpm = 120f;
     public float crotchet;
     public float songPosition;
 	public float deltaSongPosition;
@@ -18,11 +18,15 @@ public class Conductor : MonoBehaviour {
 
 	private AudioSource song;
 
+    private AudioSource boop;
+
 	// Use this for initialization
 	void Start () {
 		song = GetComponent<AudioSource>();
 		beat = 0;
 		crotchet = 0;
+
+        boop = transform.GetChild(0).GetComponent<AudioSource>();
 	}
 	
 	// Update is called once per frame
@@ -31,14 +35,13 @@ public class Conductor : MonoBehaviour {
 		songPosition = song.time - offset;
 		deltaSongPosition = songPosition - oldSongPosition;
 
+        crotchet = songPosition - ((60 / bpm) * beat);
+
 		if(crotchet >= 60f / bpm)
 		{
 			beat++;
-			crotchet -= 60f / bpm;
-		}
-		else
-		{
-			crotchet += deltaSongPosition;
+
+            boop.Play();
 		}
 
 		Debug.Log("beat: " + beat);
