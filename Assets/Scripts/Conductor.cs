@@ -14,10 +14,10 @@ public class Conductor : MonoBehaviour {
     public float songPosition;
 	public float deltaSongPosition;
     public float offset = 0f; //positive means the song must be minussed.
+    public float beatDuration;
 	public int beat;
 
 	private AudioSource song;
-
     private AudioSource boop;
 
 	// Use this for initialization
@@ -25,7 +25,7 @@ public class Conductor : MonoBehaviour {
 		song = GetComponent<AudioSource>();
 		beat = 0;
 		crotchet = 0;
-
+        beatDuration = 60f / bpm;
         boop = transform.GetChild(0).GetComponent<AudioSource>();
 	}
 	
@@ -35,16 +35,13 @@ public class Conductor : MonoBehaviour {
 		songPosition = song.time - offset;
 		deltaSongPosition = songPosition - oldSongPosition;
 
-        crotchet = songPosition - ((60 / bpm) * beat);
+        crotchet = songPosition - (beatDuration * beat);
 
-		if(crotchet >= 60f / bpm)
+		if(crotchet >= beatDuration)
 		{
 			beat++;
 
             boop.Play();
 		}
-
-		Debug.Log("beat: " + beat);
-		Debug.Log("crotchet: " + crotchet);
 	}
 }
